@@ -65,7 +65,7 @@ def calculated(request):
 
 
 def search(request):
-    tt = {}
+    tt = {'page_title': '数据查询'}
     return render(request, 'hod_template/search.html', tt)
 
 
@@ -77,13 +77,16 @@ def searchResult(request):
     db = con.cursor()
     print("Connected database successfully.")
     dbResult = db.execute(
-        "select last_name,first_name from main_app_customuser where first_name = '" + firstName + "'")
+        "select last_name,first_name,email,gender from main_app_customuser where first_name = '" + firstName + "'")
     for row in dbResult:
         print(row)
         result.append(row)
     con.close()
     print(result)
-    m = {'m': result}
+    m = {'m': result,
+         'page_title': '数据查询'
+         # 'ln':result[0]
+         }
     print(m)
     return render(request, 'hod_template/search.html', m)
 
