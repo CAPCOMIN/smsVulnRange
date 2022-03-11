@@ -48,6 +48,9 @@ urlpatterns = [
     path("search/", hod_views.search, name='search'),
     path("searchresult/", hod_views.searchResult),
 
+    # 合影与回忆照片上传/展示
+    path("group_photo/", hod_views.upload_and_show_group_photo, name='group_photo'),
+
     path("check_email_availability", hod_views.check_email_availability,
          name="check_email_availability"),
     path("session/manage/", hod_views.manage_session, name='manage_session'),

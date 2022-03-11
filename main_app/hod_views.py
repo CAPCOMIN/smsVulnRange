@@ -65,8 +65,8 @@ def calculated(request):
 
 
 def search(request):
-    tt = {'page_title': '数据查询'}
-    return render(request, 'hod_template/search.html', tt)
+    title = {'page_title': '数据查询'}
+    return render(request, 'hod_template/search.html', title)
 
 
 def searchResult(request):
@@ -89,6 +89,28 @@ def searchResult(request):
          }
     print(m)
     return render(request, 'hod_template/search.html', m)
+
+
+def upload_and_show_group_photo(request):
+    if request.method == 'POST':
+        try:
+            uploadImg = GroupPhoto(
+                img=request.FILES.get('img'),
+                name=request.FILES.get('img').name
+            )
+            print(uploadImg.img)
+            print(uploadImg.name)
+            uploadImg.save()
+            messages.success(request, "图片 "+str(uploadImg.img)+" 上传成功！")
+        except Exception as e:
+            messages.error(request, "图片上传失败, " + str(e))
+    all_img = GroupPhoto.objects.all()
+    content = {'page_title': '合影与回忆',
+               'all_'
+               'img': all_img}
+    for u in all_img:
+        print(u.img.url)
+    return render(request, 'hod_template/group_photo.html', content)
 
 
 def add_staff(request):

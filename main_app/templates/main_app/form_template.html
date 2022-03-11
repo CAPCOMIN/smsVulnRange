@@ -3,16 +3,14 @@
     <div class="card-body">
 
 
-        {% for field in form  %}
-        <div class="form-group">
-            {{field.errors}}
-            {{field.label_tag}}
-            {{field}}
+        {% for field in form %}
+            <div class="form-group">
+                {{ field.errors }}
+                {{ field.label_tag }}
+                {{ field }}
 
-        </div>
+            </div>
         {% endfor %}
-
-
 
 
     </div>
@@ -21,9 +19,9 @@
     <div class="card-footer">
         <button type="submit" class="btn btn-primary btn-block">
             {% if button_text %}
-            {{button_text}}
+                {{ button_text }}
             {% else %}
-            Submit
+                Submit
             {% endif %}
 
         </button>
