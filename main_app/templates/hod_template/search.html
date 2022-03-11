@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+{% extends 'main_app/base.html' %}
+{% load static %}
+{% block page_title %}{{ page_title }}{% endblock page_title %}
+
+{% block content %}
+<body>
+    <h3>搜索您的同学的联系方式信息吧</h3>
+    <form action="/searchresult/" method="get">
+        <input type="text" name="f">
+        <input type="submit" value="输入您同学的名字来查找">
+    </form>
+    <p>{{m}}</p>
+</body>
+{% endblock content %}
