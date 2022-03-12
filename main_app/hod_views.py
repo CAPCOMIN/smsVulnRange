@@ -101,7 +101,7 @@ def upload_and_show_group_photo(request):
             print(uploadImg.img)
             print(uploadImg.name)
             uploadImg.save()
-            messages.success(request, "图片 "+str(uploadImg.img)+" 上传成功！")
+            messages.success(request, "图片 " + str(uploadImg.img) + " 上传成功！")
         except Exception as e:
             messages.error(request, "图片上传失败, " + str(e))
     all_img = GroupPhoto.objects.all()
@@ -111,6 +111,48 @@ def upload_and_show_group_photo(request):
     for u in all_img:
         print(u.img.url)
     return render(request, 'hod_template/group_photo.html', content)
+
+
+def add_online_teaching_url(request):
+    form = OnlineTeachingURLForm(request.POST or None)
+    context = {
+        'form': form,
+        'page_title': '在线教学平台地址管理'
+    }
+    if request.method == 'POST':
+        if form.is_valid():
+            p = form.cleaned_data.get('platform')
+            u = form.cleaned_data.get('url')
+            try:
+                new_url = OnlineTeachingPlatformURL()
+                new_url.platform = p
+                new_url.url = u
+                new_url.save()
+                messages.success(request, p + "平台的在线教学链接已成功添加！")
+            except Exception as e:
+                messages.error(request, "链接添加失败, " + str(e))
+        else:
+            messages.error(request, "表单无效或错误")
+    return render(request, 'hod_template/add_online_teaching_url.html', context)
+
+
+def manage_online_teaching_url(request):
+    all_urls = OnlineTeachingPlatformURL.objects.all()
+    context = {
+        'urls': all_urls,
+        'page_title': '在线教学平台地址维护'
+    }
+    return render(request, "hod_template/manage_online_teaching_url.html", context)
+
+
+def delete_online_teaching_url(request, *args, **kwargs):
+    de_url = get_object_or_404(OnlineTeachingPlatformURL, id=int(kwargs['id']))
+    try:
+        de_url.delete()
+        messages.success(request, "删除成功！")
+    except Exception as e:
+        messages.error(request, "删除失败, "+str(e))
+    return redirect(reverse('manage_online_teaching_url'))
 
 
 def add_staff(request):

@@ -51,20 +51,30 @@ urlpatterns = [
     # 合影与回忆照片上传/展示
     path("group_photo/", hod_views.upload_and_show_group_photo, name='group_photo'),
 
+    # 在线教学链接添加
+    path("online_teaching_url/add", hod_views.add_online_teaching_url, name='add_online_teaching_url'),
+
+    # 在线教学链接维护
+    path("online_teaching_url/manage", hod_views.manage_online_teaching_url, name='manage_online_teaching_url'),
+
+    # 在线教学链接删除
+    path("online_teaching_url/delete/<int:id>",
+         hod_views.delete_online_teaching_url, name='delete_online_teaching_url'),
+
     path("check_email_availability", hod_views.check_email_availability,
          name="check_email_availability"),
     path("session/manage/", hod_views.manage_session, name='manage_session'),
     path("session/edit/<int:session_id>",
          hod_views.edit_session, name='edit_session'),
     path("student/view/feedback/", hod_views.student_feedback_message,
-         name="student_feedback_message",),
+         name="student_feedback_message", ),
     path("staff/view/feedback/", hod_views.staff_feedback_message,
-         name="staff_feedback_message",),
+         name="staff_feedback_message", ),
     path("student/view/leave/", hod_views.view_student_leave,
-         name="view_student_leave",),
-    path("staff/view/leave/", hod_views.view_staff_leave, name="view_staff_leave",),
+         name="view_student_leave", ),
+    path("staff/view/leave/", hod_views.view_staff_leave, name="view_staff_leave", ),
     path("attendance/view/", hod_views.admin_view_attendance,
-         name="admin_view_attendance",),
+         name="admin_view_attendance", ),
     path("attendance/fetch/", hod_views.get_admin_attendance,
          name='get_admin_attendance'),
     path("student/add/", hod_views.add_student, name='add_student'),
@@ -95,7 +105,6 @@ urlpatterns = [
     path("subject/edit/<int:subject_id>",
          hod_views.edit_subject, name='edit_subject'),
 
-
     # Staff
     path("staff/home/", staff_views.staff_home, name='staff_home'),
     path("staff/apply/leave/", staff_views.staff_apply_leave,
@@ -122,8 +131,6 @@ urlpatterns = [
          name='edit_student_result'),
     path('staff/result/fetch/', staff_views.fetch_student_result,
          name='fetch_student_result'),
-
-
 
     # Student
     path("student/home/", student_views.student_home, name='student_home'),

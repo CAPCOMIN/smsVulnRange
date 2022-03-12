@@ -76,6 +76,26 @@
             </a>
         </li>
         <li class="nav-item">
+            {% url 'add_online_teaching_url' as add_online_teaching_url %}
+            <a href="{{ add_online_teaching_url }}"
+               class="nav-link {% if add_online_teaching_url == request.path %} active {% endif %}">
+                <i class="nav-icon fas fa-th"></i>
+                <p>
+                    在线教学平台地址添加
+                </p>
+            </a>
+        </li>
+        <li class="nav-item">
+            {% url 'manage_online_teaching_url' as manage_online_teaching_url %}
+            <a href="{{ manage_online_teaching_url }}"
+               class="nav-link {% if manage_online_teaching_url == request.path %} active {% endif %}">
+                <i class="nav-icon fas fa-th"></i>
+                <p>
+                    在线教学平台地址维护
+                </p>
+            </a>
+        </li>
+        <li class="nav-item">
             {% url 'admin_notify_staff' as admin_notify_staff %}
             <a href="{{ admin_notify_staff }}"
                class="nav-link {% if admin_notify_staff == request.path %} active {% endif %}">

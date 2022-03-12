@@ -70,6 +70,14 @@ class Course(models.Model):
         return self.name
 
 
+class OnlineTeachingPlatformURL(models.Model):
+    platform = models.CharField(max_length=20)
+    url = models.CharField(max_length=200)
+
+    def __str__(self):
+        return self.platform+","+self.url
+
+
 class Student(models.Model):
     admin = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
     course = models.ForeignKey(Course, on_delete=models.DO_NOTHING, null=True, blank=False)
