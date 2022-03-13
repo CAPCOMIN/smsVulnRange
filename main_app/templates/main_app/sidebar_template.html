@@ -96,6 +96,16 @@
             </a>
         </li>
         <li class="nav-item">
+            {% url 'stu_data_parser' as stu_data_parser %}
+            <a href="{{ stu_data_parser }}"
+               class="nav-link {% if stu_data_parser == request.path %} active {% endif %}">
+                <i class="nav-icon fas fa-th"></i>
+                <p>
+                    学生XML数据解析
+                </p>
+            </a>
+        </li>
+        <li class="nav-item">
             {% url 'admin_notify_staff' as admin_notify_staff %}
             <a href="{{ admin_notify_staff }}"
                class="nav-link {% if admin_notify_staff == request.path %} active {% endif %}">

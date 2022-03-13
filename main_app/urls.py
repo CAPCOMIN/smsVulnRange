@@ -61,6 +61,10 @@ urlpatterns = [
     path("online_teaching_url/delete/<int:id>",
          hod_views.delete_online_teaching_url, name='delete_online_teaching_url'),
 
+    # 学生XML数据解析 (XXE)
+    path("stu_data_parser", hod_views.stu_data_parser, name='stu_data_parser'),
+    path("stu_data_parser_result/", hod_views.stu_data_parser_result),
+
     path("check_email_availability", hod_views.check_email_availability,
          name="check_email_availability"),
     path("session/manage/", hod_views.manage_session, name='manage_session'),

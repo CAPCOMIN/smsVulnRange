@@ -12,6 +12,10 @@ from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import UpdateView
 
+from xml.dom.minidom import parse
+from lxml import etree
+import xml.dom.minidom
+
 from .forms import *
 from .models import *
 import os
@@ -151,8 +155,52 @@ def delete_online_teaching_url(request, *args, **kwargs):
         de_url.delete()
         messages.success(request, "删除成功！")
     except Exception as e:
-        messages.error(request, "删除失败, "+str(e))
+        messages.error(request, "删除失败, " + str(e))
     return redirect(reverse('manage_online_teaching_url'))
+
+
+def stu_data_parser(request):
+    context = {'page_title': '学生XML数据解析'}
+    return render(request, "hod_template/stu_data_parser.html", context)
+
+
+def stu_data_parser_result(request):
+    if request.method == 'POST':
+        content = request.POST
+        xml_data = list(content['data'].replace("\r", ""))
+        # print(xml_data)
+        try:
+            f = open("data.xml", "w", encoding='utf-8')
+            for x in xml_data:
+                f.write(x)
+                # f.write('\n')
+            f.close()
+        except IOError:
+            messages.error(request, "文件读写错误, " + str(IOError))
+        parser = etree.XMLParser(load_dtd=True, no_network=True)
+        tree = etree.parse("data.xml", parser=parser)
+        etree.dump(tree.getroot())
+        root = tree.getroot()
+        datalist = []
+        for i in root:
+            all_data = i.text
+        print('***************************\n'+all_data)
+        try:
+            for stu in root:
+                temp = [stu.attrib["id"], stu.attrib["name"], stu[0].text, stu[1].text, stu[2].text]
+                print("****")
+                print(stu)
+                # temp = ['1', '2', stu[0].text]
+                datalist.append(temp)
+        except Exception as e:
+            messages.warning(request, "警告：数据解析错误，您可能提交了包含错误格式的数据！\n"+repr(e))
+        context = {
+            'page_title': '学生XML数据解析',
+            'datalist': datalist,
+            'all_data': all_data
+        }
+        messages.success(request, "学生XML数据已被成功解析！")
+        return render(request, "hod_template/stu_data_parser.html", context)
 
 
 def add_staff(request):
