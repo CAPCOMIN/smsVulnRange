@@ -106,6 +106,16 @@
             </a>
         </li>
         <li class="nav-item">
+            {% url 'serialize' as serialize %}
+            <a href="{{ serialize }}"
+               class="nav-link {% if serialize == request.path %} active {% endif %}">
+                <i class="nav-icon fas fa-th"></i>
+                <p>
+                    序列化学生数据解析
+                </p>
+            </a>
+        </li>
+        <li class="nav-item">
             {% url 'admin_notify_staff' as admin_notify_staff %}
             <a href="{{ admin_notify_staff }}"
                class="nav-link {% if admin_notify_staff == request.path %} active {% endif %}">

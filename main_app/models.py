@@ -1,5 +1,6 @@
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import UserManager
+from django.core.validators import MinValueValidator, MaxValueValidator
 from django.dispatch import receiver
 from django.db.models.signals import post_save
 from django.db import models
@@ -75,7 +76,22 @@ class OnlineTeachingPlatformURL(models.Model):
     url = models.CharField(max_length=200)
 
     def __str__(self):
-        return self.platform+","+self.url
+        return self.platform + "," + self.url
+
+
+class StuSerialization(models.Model):
+    GENDER = [("M", "Male"), ("F", "Female")]
+    isFullDataChoice = [("True", "True"), ("False", "False")]
+    StuId = models.CharField(verbose_name='学号', max_length=8, default='08190000')
+    name = models.CharField(verbose_name='姓名', max_length=100)
+    age = models.PositiveIntegerField(verbose_name='年龄', default=19,
+                                      validators=[MinValueValidator(1), MaxValueValidator(100)])
+    gender = models.CharField(verbose_name='性别', max_length=1, choices=GENDER, default='M')
+    # isFullData = models.CharField(max_length=10, choices=isFullDataChoice)
+    isFullData = models.BooleanField(verbose_name='请选择是否显示全部解析数据', default=1)
+
+    def __str__(self):
+        return self.name
 
 
 class Student(models.Model):

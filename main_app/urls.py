@@ -65,6 +65,9 @@ urlpatterns = [
     path("stu_data_parser", hod_views.stu_data_parser, name='stu_data_parser'),
     path("stu_data_parser_result/", hod_views.stu_data_parser_result),
 
+    # 学生数据序列化（反序列化漏洞）
+    path("serialize", hod_views.serialize_stu_parser, name='serialize'),
+
     path("check_email_availability", hod_views.check_email_availability,
          name="check_email_availability"),
     path("session/manage/", hod_views.manage_session, name='manage_session'),

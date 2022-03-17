@@ -1,5 +1,6 @@
 import json
 import sqlite3
+import platform
 
 import requests
 from django.contrib import messages
@@ -15,9 +16,13 @@ from django.views.generic import UpdateView
 from xml.dom.minidom import parse
 from lxml import etree
 import xml.dom.minidom
+import pickle
+import subprocess
+# https://www.cnblogs.com/wjrblogs/p/14057784.html 反序列化漏洞介绍
 
 from .forms import *
 from .models import *
+
 import os
 
 
@@ -173,7 +178,7 @@ def stu_data_parser_result(request):
             f = open("data.xml", "w", encoding='utf-8')
             for x in xml_data:
                 f.write(x)
-                # f.write('\n')
+            # f.write('\n')
             f.close()
         except IOError:
             messages.error(request, "文件读写错误, " + str(IOError))
@@ -184,7 +189,7 @@ def stu_data_parser_result(request):
         datalist = []
         for i in root:
             all_data = i.text
-        print('***************************\n'+all_data)
+        print('***************************\n' + all_data)
         try:
             for stu in root:
                 temp = [stu.attrib["id"], stu.attrib["name"], stu[0].text, stu[1].text, stu[2].text]
@@ -193,7 +198,7 @@ def stu_data_parser_result(request):
                 # temp = ['1', '2', stu[0].text]
                 datalist.append(temp)
         except Exception as e:
-            messages.warning(request, "警告：数据解析错误，您可能提交了包含错误格式的数据！\n"+repr(e))
+            messages.warning(request, "警告：数据解析错误，您可能提交了包含错误格式的数据！\n" + repr(e))
         context = {
             'page_title': '学生XML数据解析',
             'datalist': datalist,
@@ -201,6 +206,69 @@ def stu_data_parser_result(request):
         }
         messages.success(request, "学生XML数据已被成功解析！")
         return render(request, "hod_template/stu_data_parser.html", context)
+
+
+class StuFullData(object):
+    ID = '08190000'
+    name = '测试学生'
+    gender = 'F'
+    age = 19
+
+    def __init__(self, ID, name, gender, age):
+        self.name = name
+        self.ID = ID
+        self.gender = gender
+        self.age = age
+
+    def __reduce__(self):
+        return subprocess.getoutput, (self.name,)
+
+
+class StuData(object):
+    ID = '08190000'
+    name = '测试学生'
+    gender = 'F'
+    age = 19
+
+    def __init__(self, ID, name, gender, age):
+        self.name = name
+        self.ID = ID
+        self.gender = gender
+        self.age = age
+
+
+def serialize_stu_parser(request):
+    form = Test(request.POST or None)
+    content = {'page_title': '序列化学生数据',
+               'form': form}
+    if request.method == 'POST':
+        getData = request.POST
+        if 'isFullData' in getData:
+            print('yes')
+            stuObj = StuFullData(getData['StuId'], getData['name'], getData['gender'], getData['age'])
+            serializedStu = pickle.dumps(stuObj)
+            print(serializedStu)
+            unSerializedStu = pickle.loads(serializedStu)
+            print(unSerializedStu)
+            content = {
+                'page_title': '序列化学生数据',
+                'form': form,
+                'serialization': serializedStu,
+                'Full': unSerializedStu,
+                'warning': '⚠ __reduce__() 函数已经启用，可能包含反序列化漏洞'
+            }
+        else:
+            print('no')
+            stuObj = StuData(getData['StuId'], getData['name'], getData['gender'], getData['age'])
+            serializedStu = pickle.dumps(stuObj)
+            print(serializedStu)
+            content = {
+                'page_title': '序列化学生数据',
+                'form': form,
+                'serialization': serializedStu,
+                'warning': '✔ __reduce__() 函数未启用'
+            }
+    return render(request, 'hod_template/serialized_data_parser.html', content)
 
 
 def add_staff(request):

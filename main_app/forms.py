@@ -102,6 +102,15 @@ class OnlineTeachingURLForm(FormSettings):
         model = OnlineTeachingPlatformURL
 
 
+class Test(FormSettings):
+    def __init__(self, *args, **kwargs):
+        super(Test, self).__init__(*args, **kwargs)
+
+    class Meta:
+        fields = ['StuId', 'name', 'age', 'gender', 'isFullData']
+        model = StuSerialization
+
+
 class SubjectForm(FormSettings):
 
     def __init__(self, *args, **kwargs):
@@ -198,4 +207,3 @@ class EditResultForm(FormSettings):
     class Meta:
         model = StudentResult
         fields = ['session_year', 'subject', 'student', 'test', 'exam']
-
