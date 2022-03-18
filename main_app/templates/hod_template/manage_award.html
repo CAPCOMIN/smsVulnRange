@@ -10,7 +10,7 @@
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-header">
-                        <h3 class="card-title">{{page_title}}</h3>
+                        <h3 class="card-title">个人奖项管理</h3>
                     </div>
                     <!-- /.card-header -->
                     <div class="card-body">
@@ -18,21 +18,23 @@
                             <thead>
                                 <tr>
                                     <th>序号</th>
-                                    <th>在线平台</th>
-                                    <th>链接</th>
+                                    <th>获奖人</th>
+                                    <th>奖项名称</th>
+                                    <th>奖金</th>
+                                    <th>获奖日期</th>
                                     <th>操作</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                {% for u in urls %}
+                                {% for award in awards %}
                                 <tr>
                                     <td>{{ forloop.counter }}</td>
-                                    <td>{{u.platform}}</td>
-{#                                    <td>{{u.url|safe}}</td>  本处可绕过防御，完成XSS攻击 #}
-{#                                    <td>{{u.url}}</td>  本处使用了django的防御，无法完成XSS #}
-                                    <td> <a target="_blank" href='{{u.url}}'> {{u.url}}</a></td>
+                                    <td>{{award.winner}}</td>
+                                    <td>{{award.awardName}}</td>
+                                    <td>RMB {{award.bonus}}</td>
+                                    <td>{{award.winningDate}}</td>
                                     <td>
-                                        <a href="{% url 'delete_online_teaching_url' u.id %}" onclick="return confirm('确定要删除吗?')" class="btn btn-danger">删除</a>
+                                        <a href="{% url 'delete_award' award.id %}" onclick="return confirm('确定要删除该项吗？')" class="btn btn-danger">删除</a>
                                     </td>
                                 </tr>
                                 {% endfor %}

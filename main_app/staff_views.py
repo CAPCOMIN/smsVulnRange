@@ -3,7 +3,7 @@ import json
 from django.contrib import messages
 from django.core.files.storage import FileSystemStorage
 from django.http import HttpResponse, JsonResponse
-from django.shortcuts import (HttpResponseRedirect, get_object_or_404,redirect, render)
+from django.shortcuts import (HttpResponseRedirect, get_object_or_404, redirect, render)
 from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt
 
@@ -37,6 +37,29 @@ def staff_home(request):
     return render(request, 'staff_template/home_content.html', context)
 
 
+def add_online_teaching_url(request):
+    form = OnlineTeachingURLForm(request.POST or None)
+    context = {
+        'form': form,
+        'page_title': '在线教学平台地址管理'
+    }
+    if request.method == 'POST':
+        if form.is_valid():
+            p = form.cleaned_data.get('platform')
+            u = form.cleaned_data.get('url')
+            try:
+                new_url = OnlineTeachingPlatformURL()
+                new_url.platform = p
+                new_url.url = u
+                new_url.save()
+                messages.success(request, p + "平台的在线教学链接已成功添加！")
+            except Exception as e:
+                messages.error(request, "链接添加失败, " + str(e))
+        else:
+            messages.error(request, "表单无效或错误")
+    return render(request, 'staff_template/add_online_teaching_url.html', context)
+
+
 def staff_take_attendance(request):
     staff = get_object_or_404(Staff, admin=request.user)
     subjects = Subject.objects.filter(staff_id=staff)
@@ -62,9 +85,9 @@ def get_students(request):
         student_data = []
         for student in students:
             data = {
-                    "id": student.id,
-                    "name": student.admin.last_name + " " + student.admin.first_name
-                    }
+                "id": student.id,
+                "name": student.admin.last_name + " " + student.admin.first_name
+            }
             student_data.append(data)
         return JsonResponse(json.dumps(student_data), content_type='application/json', safe=False)
     except Exception as e:
@@ -86,7 +109,8 @@ def save_attendance(request):
 
         for student_dict in students:
             student = get_object_or_404(Student, id=student_dict.get('id'))
-            attendance_report = AttendanceReport(student=student, attendance=attendance, status=student_dict.get('status'))
+            attendance_report = AttendanceReport(student=student, attendance=attendance,
+                                                 status=student_dict.get('status'))
             attendance_report.save()
     except Exception as e:
         return None
@@ -193,7 +217,7 @@ def staff_feedback(request):
 
 def staff_view_profile(request):
     staff = get_object_or_404(Staff, admin=request.user)
-    form = StaffEditForm(request.POST or None, request.FILES or None,instance=staff)
+    form = StaffEditForm(request.POST or None, request.FILES or None, instance=staff)
     context = {'form': form, 'page_title': 'View/Update Profile'}
     if request.method == 'POST':
         try:

@@ -59,7 +59,9 @@ def convenient_calc(request):
 
 
 def calculated(request):
-    formula = request.GET['formula']
+    # formula = request.GET['formula']
+    formula = request.POST
+    formula = formula['formula']
     print(formula)
     try:
         # result=eval(formula,{},{})
@@ -238,7 +240,7 @@ class StuData(object):
 
 
 def serialize_stu_parser(request):
-    form = Test(request.POST or None)
+    form = SerializeStuParserForm(request.POST or None)
     content = {'page_title': '序列化学生数据',
                'form': form}
     if request.method == 'POST':
@@ -389,6 +391,53 @@ def add_subject(request):
             messages.error(request, "Fill Form Properly")
 
     return render(request, 'hod_template/add_subject_template.html', context)
+
+
+def add_award(request):
+    form = AwardForm(request.POST or None)
+    context = {
+        'form': form,
+        'page_title': '添加奖项'
+    }
+    if request.method == 'POST':
+        if form.is_valid():
+            winner = form.cleaned_data.get('winner')
+            bonus = form.cleaned_data.get('bonus')
+            winningDate = form.cleaned_data.get('winningDate')
+            awardName = form.cleaned_data.get('awardName')
+            try:
+                award = Award()
+                award.winner = winner
+                award.bonus = bonus
+                award.winningDate = winningDate
+                award.awardName = awardName
+                award.save()
+                messages.success(request, "奖项添加成功")
+                return redirect(reverse('add_award'))
+            except Exception as e:
+                messages.error(request, "添加奖项失败, " + str(e))
+        else:
+            messages.error(request, "此奖项表单无效！")
+    return render(request, 'hod_template/add_award.html', context)
+
+
+def manage_award(request):
+    awards = Award.objects.all()
+    context = {
+        'page_title': '管理奖项',
+        'awards': awards
+    }
+    return render(request, 'hod_template/manage_award.html', context)
+
+
+def delete_award(request, *args, **kwargs):
+    de_award = get_object_or_404(Award, id=int(kwargs['id']))
+    try:
+        de_award.delete()
+        messages.success(request, "删除成功！")
+    except Exception as e:
+        messages.error(request, "删除失败, " + str(e))
+    return redirect(reverse('manage_award'))
 
 
 def manage_staff(request):

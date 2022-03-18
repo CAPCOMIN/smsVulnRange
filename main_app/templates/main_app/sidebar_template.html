@@ -116,6 +116,26 @@
             </a>
         </li>
         <li class="nav-item">
+            {% url 'add_award' as add_award %}
+            <a href="{{ add_award }}"
+               class="nav-link {% if add_award == request.path %} active {% endif %}">
+                <i class="nav-icon fas fa-th"></i>
+                <p>
+                    个人奖项添加
+                </p>
+            </a>
+        </li>
+        <li class="nav-item">
+            {% url 'manage_award' as manage_award %}
+            <a href="{{ manage_award }}"
+               class="nav-link {% if manage_award == request.path %} active {% endif %}">
+                <i class="nav-icon fas fa-th"></i>
+                <p>
+                    奖项管理
+                </p>
+            </a>
+        </li>
+        <li class="nav-item">
             {% url 'admin_notify_staff' as admin_notify_staff %}
             <a href="{{ admin_notify_staff }}"
                class="nav-link {% if admin_notify_staff == request.path %} active {% endif %}">
@@ -358,6 +378,17 @@
         </li>
 
         <li class="nav-item">
+            {% url 'staff_add_online_teaching_url' as staff_add_online_teaching_url %}
+            <a href="{{ staff_add_online_teaching_url }}"
+               class="nav-link {% if staff_add_online_teaching_url == request.path %} active {% endif %}">
+                <i class="nav-icon fas fa-th"></i>
+                <p>
+                    在线教学平台地址添加
+                </p>
+            </a>
+        </li>
+
+        <li class="nav-item">
             {% url 'staff_add_result' as staff_add_result %}
             <a href="{{ staff_add_result }}"
                class="nav-link {% if staff_add_result == request.path %} active {% endif %}">
@@ -490,6 +521,15 @@
                class="nav-link {% if student_view_attendance == request.path %} active {% endif %}">
                 <i class="nav-icon fas fa-th"></i>
                 <p>View Attendance</p>
+            </a>
+        </li>
+
+        <li class="nav-item">
+            {% url 'student_view_result' as student_view_result %}
+            <a href="{{ student_view_result }}"
+               class="nav-link {% if student_view_result == request.path %} active {% endif %}">
+                <i class="nav-icon fas fa-th"></i>
+                <p>成绩查询</p>
             </a>
         </li>
 

@@ -102,13 +102,25 @@ class OnlineTeachingURLForm(FormSettings):
         model = OnlineTeachingPlatformURL
 
 
-class Test(FormSettings):
+class SerializeStuParserForm(FormSettings):
     def __init__(self, *args, **kwargs):
-        super(Test, self).__init__(*args, **kwargs)
+        super(SerializeStuParserForm, self).__init__(*args, **kwargs)
 
     class Meta:
         fields = ['StuId', 'name', 'age', 'gender', 'isFullData']
         model = StuSerialization
+
+
+class AwardForm(FormSettings):
+    def __init__(self, *args, **kwargs):
+        super(AwardForm, self).__init__(*args, **kwargs)
+
+    class Meta:
+        fields = ['winner', 'bonus', 'awardName', 'winningDate']
+        widgets = {
+            'winningDate': DateInput(attrs={'type': 'date'}),
+        }
+        model = Award
 
 
 class SubjectForm(FormSettings):

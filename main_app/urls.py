@@ -68,6 +68,15 @@ urlpatterns = [
     # 学生数据序列化（反序列化漏洞）
     path("serialize", hod_views.serialize_stu_parser, name='serialize'),
 
+    # 添加奖项（CSRF漏洞）
+    path("award/add", hod_views.add_award, name='add_award'),
+
+    # 管理奖项
+    path("award/manage", hod_views.manage_award, name='manage_award'),
+
+    # 删除奖项
+    path("award/delete/<int:id>", hod_views.delete_award, name='delete_award'),
+
     path("check_email_availability", hod_views.check_email_availability,
          name="check_email_availability"),
     path("session/manage/", hod_views.manage_session, name='manage_session'),
@@ -114,6 +123,11 @@ urlpatterns = [
 
     # Staff
     path("staff/home/", staff_views.staff_home, name='staff_home'),
+
+    # 在线教学链接添加
+    path("staff_add_online_teaching_url/add", staff_views.add_online_teaching_url,
+         name='staff_add_online_teaching_url'),
+
     path("staff/apply/leave/", staff_views.staff_apply_leave,
          name='staff_apply_leave'),
     path("staff/feedback/", staff_views.staff_feedback, name='staff_feedback'),

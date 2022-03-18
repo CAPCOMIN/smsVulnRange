@@ -55,7 +55,7 @@ class CustomUser(AbstractUser):
     objects = CustomUserManager()
 
     def __str__(self):
-        return self.last_name + ", " + self.first_name
+        return self.last_name + self.first_name
 
 
 class Admin(models.Model):
@@ -120,6 +120,13 @@ class Subject(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class Award(models.Model):
+    winner = models.ForeignKey(CustomUser, verbose_name='获奖者', on_delete=models.CASCADE)
+    bonus = models.DecimalField(verbose_name='奖金', max_digits=8, decimal_places=2)
+    winningDate = models.DateField(verbose_name='获奖日期')
+    awardName = models.CharField(max_length=120, verbose_name='奖项名称')
 
 
 class Attendance(models.Model):
