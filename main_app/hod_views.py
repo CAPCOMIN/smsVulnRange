@@ -20,14 +20,14 @@ import pickle
 import subprocess
 # https://www.cnblogs.com/wjrblogs/p/14057784.html 反序列化漏洞介绍
 
-from pystrich.qrcode import QRCodeEncoder
-from pystrich.code128 import Code128Encoder
-
 import main_app.admin
 from .forms import *
 from .models import *
 
 import os
+import logging
+
+from .pystrich.code128 import Code128Encoder
 
 
 def admin_home(request):
