@@ -123,6 +123,15 @@ class AwardForm(FormSettings):
         model = Award
 
 
+class StuExamNumberForm(FormSettings):
+    def __init__(self, *args, **kwargs):
+        super(StuExamNumberForm, self).__init__(*args, **kwargs)
+
+    class Meta:
+        fields = ['StuId', 'examMode']
+        model = StuExamNumber
+
+
 class SubjectForm(FormSettings):
 
     def __init__(self, *args, **kwargs):

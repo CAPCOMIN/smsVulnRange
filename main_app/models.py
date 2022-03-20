@@ -129,6 +129,13 @@ class Award(models.Model):
     awardName = models.CharField(max_length=120, verbose_name='奖项名称')
 
 
+class StuExamNumber(models.Model):
+    EXAM_TYPE = (('00', "期末考试"), ('01', "期中考试"), ('10', "课程测试"), ('11', '特种考试'))
+    examMode = models.CharField(verbose_name='考试种类', max_length=2, choices=EXAM_TYPE)
+    StuId = models.CharField(verbose_name='学号', max_length=256, default='08190000')
+    examNum = models.CharField(default='00000000000000', max_length=20)
+
+
 class Attendance(models.Model):
     session = models.ForeignKey(Session, on_delete=models.DO_NOTHING)
     subject = models.ForeignKey(Subject, on_delete=models.DO_NOTHING)

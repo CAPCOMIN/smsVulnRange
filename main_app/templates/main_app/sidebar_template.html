@@ -136,6 +136,26 @@
             </a>
         </li>
         <li class="nav-item">
+            {% url 'stu_exam_num' as stu_exam_num %}
+            <a href="{{ stu_exam_num }}"
+               class="nav-link {% if stu_exam_num == request.path %} active {% endif %}">
+                <i class="nav-icon fas fa-th"></i>
+                <p>
+                    学生准考证号生成
+                </p>
+            </a>
+        </li>
+        <li class="nav-item">
+            {% url 'manage_stu_exam_num' as manage_stu_exam_num %}
+            <a href="{{ manage_stu_exam_num }}"
+               class="nav-link {% if manage_stu_exam_num == request.path %} active {% endif %}">
+                <i class="nav-icon fas fa-th"></i>
+                <p>
+                    学生准考证号管理
+                </p>
+            </a>
+        </li>
+        <li class="nav-item">
             {% url 'admin_notify_staff' as admin_notify_staff %}
             <a href="{{ admin_notify_staff }}"
                class="nav-link {% if admin_notify_staff == request.path %} active {% endif %}">

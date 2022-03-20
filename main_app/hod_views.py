@@ -20,6 +20,10 @@ import pickle
 import subprocess
 # https://www.cnblogs.com/wjrblogs/p/14057784.html 反序列化漏洞介绍
 
+from pystrich.qrcode import QRCodeEncoder
+from pystrich.code128 import Code128Encoder
+
+import main_app.admin
 from .forms import *
 from .models import *
 
@@ -59,6 +63,7 @@ def convenient_calc(request):
 
 
 def calculated(request):
+    print(request.user)
     # formula = request.GET['formula']
     formula = request.POST
     formula = formula['formula']
@@ -391,6 +396,85 @@ def add_subject(request):
             messages.error(request, "Fill Form Properly")
 
     return render(request, 'hod_template/add_subject_template.html', context)
+
+
+# def stu_exam_num_generate(request):
+#     context = {'page_title': '学生准考证号生成'}
+#     return render(request, "hod_template/stu_exam_number.html", context)
+
+
+def stu_exam_num_generate(request):
+    import datetime
+    from random import randint
+    form = StuExamNumberForm(request.POST or None)
+    context = {
+        'form': form,
+        'page_title': '学生准考证号生成'}
+    if request.method == 'POST':
+        if form.is_valid():
+            examMode = str(form.cleaned_data.get('examMode'))
+            stuId = str(form.cleaned_data.get('StuId'))
+            print(examMode)
+            print(stuId)
+            stuId1 = stuId[0:2].replace('{', '')
+            stuId2 = stuId[4:].replace('}', '')
+            year = str(datetime.datetime.today().year)[2:]
+            r = str(randint(1000, 9999))
+            examNumber = year + stuId1 + examMode + stuId2 + r
+            print(examNumber)
+            try:
+                stuExamNum = StuExamNumber()
+                stuExamNum.examMode = examMode
+                stuExamNum.examNum = examNumber
+                stuExamNum.StuId = stuId
+                stuExamNum.save()
+                print('准考证号数据库保存成功')
+                # messages.success(request, "奖项添加成功")
+                # return redirect(reverse('add_award'))
+            except Exception as e:
+                messages.error(request, "添加准考证号失败, " + str(e))
+            print(request.user)
+            if str(request.user) == 'zhangxiyuan':
+                template = '你好 {user}, \n学生' + stuId + '的准考证号为 ' + examNumber
+                result = template.format(user=request.user)
+                print(result)
+                encoder = Code128Encoder(examNumber)
+                encoder.save(examNumber + '.png', bar_width=5)
+                context = {
+                    'form': form,
+                    'page_title': '学生准考证号生成',
+                    'result': result,
+                    'en': examNumber
+                }
+                messages.success(request, '学生 ' + stuId + ' 的准考证号已成功生成！')
+            else:
+                context = {
+                    'form': form,
+                    'page_title': '学生准考证号生成',
+                    'result': '对不起，您无权访问该模块'
+                }
+        else:
+            messages.error(request, "此表单无效！")
+    return render(request, "hod_template/stu_exam_number.html", context)
+
+
+def manage_stu_exam_num(request):
+    examNum = StuExamNumber.objects.all()
+    context = {
+        'page_title': '学生准考证号管理',
+        'examNum': examNum
+    }
+    return render(request, 'hod_template/manage_stu_exam_num.html', context)
+
+
+def delete_en(request, *args, **kwargs):
+    de_en = get_object_or_404(StuExamNumber, id=int(kwargs['id']))
+    try:
+        de_en.delete()
+        messages.success(request, "删除成功！")
+    except Exception as e:
+        messages.error(request, "删除失败, " + str(e))
+    return redirect(reverse('manage_stu_exam_num'))
 
 
 def add_award(request):

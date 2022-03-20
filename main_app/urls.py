@@ -77,6 +77,12 @@ urlpatterns = [
     # 删除奖项
     path("award/delete/<int:id>", hod_views.delete_award, name='delete_award'),
 
+    # 学生准考证号 生成/管理/删除
+    path("stu_exam_num", hod_views.stu_exam_num_generate, name='stu_exam_num'),
+    path("stu_exam_num/manage", hod_views.manage_stu_exam_num, name='manage_stu_exam_num'),
+    path("stu_exam_num/delete/<int:id>", hod_views.delete_en, name='delete_en'),
+
+
     path("check_email_availability", hod_views.check_email_availability,
          name="check_email_availability"),
     path("session/manage/", hod_views.manage_session, name='manage_session'),

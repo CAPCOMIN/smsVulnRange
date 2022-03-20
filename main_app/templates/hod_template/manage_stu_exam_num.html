@@ -8,9 +8,9 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col-md-12">
-                <div class="card card-yellow">
+                <div class="card card-lightblue">
                     <div class="card-header">
-                        <h3 class="card-title">个人奖项管理
+                        <h3 class="card-title">学生准考证号管理
                         </h3>
                     </div>
                     <!-- /.card-header -->
@@ -19,23 +19,30 @@
                             <thead>
                                 <tr>
                                     <th>序号</th>
-                                    <th>获奖人</th>
-                                    <th>奖项名称</th>
-                                    <th>奖金</th>
-                                    <th>获奖日期</th>
+                                    <th>学号</th>
+                                    <th>考试类型</th>
+                                    <th>准考证号</th>
+                                    <th>识别码</th>
                                     <th>操作</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                {% for award in awards %}
+                                {% for en in examNum %}
                                 <tr>
                                     <td>{{ forloop.counter }}</td>
-                                    <td>{{award.winner}}</td>
-                                    <td>{{award.awardName}}</td>
-                                    <td>RMB {{award.bonus}}</td>
-                                    <td>{{award.winningDate}}</td>
+                                    <td>{{en.StuId}}</td>
+                                    <td>{{en.examMode}}</td>
+                                    <td>{{en.examNum}}</td>
                                     <td>
-                                        <a href="{% url 'delete_award' award.id %}" onclick="return confirm('确定要删除该项吗？')" class="btn btn-danger">删除</a>
+{#                                        {% if staff.profile_pic == ""  %}#}
+{#                                        No Image#}
+{#                                        {% else %}#}
+                                        <img class="img img-fluid mb-2" height="55" width="165"
+                                            src="/media/code-img/{{ en.examNum }}.png" alt="123">
+{#                                        {% endif %}#}
+                                    </td>
+                                    <td>
+                                        <a href="{% url 'delete_en' en.id %}" onclick="return confirm('确定要删除该项吗？')" class="btn btn-danger">删除</a>
                                     </td>
                                 </tr>
                                 {% endfor %}
