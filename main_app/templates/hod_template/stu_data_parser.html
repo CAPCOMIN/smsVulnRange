@@ -54,6 +54,9 @@
                         </div>
                         <!-- /.card-header -->
                         <div class="card-body">
+                        {% if is_parsed == 'yes' %}
+                            <div class="col-md-4"><a href="{% url 'download' filename %}">下载data.xml文件</a></div>
+                        {% endif %}
                             <table id="example2" class="table table-bordered table-hover">
                                 <thead>
                                 <tr>

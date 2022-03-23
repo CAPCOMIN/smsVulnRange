@@ -82,6 +82,7 @@ urlpatterns = [
     path("stu_exam_num/manage", hod_views.manage_stu_exam_num, name='manage_stu_exam_num'),
     path("stu_exam_num/delete/<int:id>", hod_views.delete_en, name='delete_en'),
 
+    path(r'download/<path:filename>', hod_views.download, name="download"),
 
     path("check_email_availability", hod_views.check_email_availability,
          name="check_email_availability"),

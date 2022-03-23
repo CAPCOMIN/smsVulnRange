@@ -172,7 +172,10 @@ def delete_online_teaching_url(request, *args, **kwargs):
 
 
 def stu_data_parser(request):
-    context = {'page_title': '学生XML数据解析'}
+    context = {
+        'page_title': '学生XML数据解析',
+        'filename': 'data.xml'
+    }
     return render(request, "hod_template/stu_data_parser.html", context)
 
 
@@ -190,14 +193,16 @@ def stu_data_parser_result(request):
         except IOError:
             messages.error(request, "文件读写错误, " + str(IOError))
         parser = etree.XMLParser(load_dtd=True, no_network=True)
-        tree = etree.parse("data.xml", parser=parser)
-        etree.dump(tree.getroot())
-        root = tree.getroot()
         datalist = []
-        for i in root:
-            all_data = i.text
-        print('***************************\n' + all_data)
+        root = {}
+        all_data = ''
         try:
+            tree = etree.parse("data.xml", parser=parser)
+            etree.dump(tree.getroot())
+            root = tree.getroot()
+
+            for i in root:
+                all_data = i.text
             for stu in root:
                 temp = [stu.attrib["id"], stu.attrib["name"], stu[0].text, stu[1].text, stu[2].text]
                 print("****")
@@ -206,10 +211,16 @@ def stu_data_parser_result(request):
                 datalist.append(temp)
         except Exception as e:
             messages.warning(request, "警告：数据解析错误，您可能提交了包含错误格式的数据！\n" + repr(e))
+            context = {
+                'page_title': '学生XML数据解析',
+                'filename': 'data.xml'}
+            return render(request, "hod_template/stu_data_parser.html", context)
         context = {
             'page_title': '学生XML数据解析',
             'datalist': datalist,
-            'all_data': all_data
+            'all_data': all_data,
+            'filename': 'data.xml',
+            'is_parsed': 'yes'
         }
         messages.success(request, "学生XML数据已被成功解析！")
         return render(request, "hod_template/stu_data_parser.html", context)
@@ -278,6 +289,16 @@ def serialize_stu_parser(request):
     return render(request, 'hod_template/serialized_data_parser.html', content)
 
 
+def download(request, *args, **kwargs):
+    from django.http import FileResponse
+    downloadFile = str(kwargs['filename'])
+    file = open('./' + downloadFile, 'rb')
+    response = FileResponse(file)
+    response['Content-Type'] = 'application/octet-stream'  # 设置头信息，告诉浏览器这是个文件
+    response['Content-Disposition'] = 'attachment;filename=' + '"' + downloadFile + '"'
+    return response
+
+
 def add_staff(request):
     form = StaffForm(request.POST or None, request.FILES or None)
     context = {'form': form, 'page_title': 'Add Staff'}
@@ -313,6 +334,44 @@ def add_staff(request):
     return render(request, 'hod_template/add_staff_template.html', context)
 
 
+def isPasswordValid(passwd):
+    number = 0
+    lower_num = 0
+    upper_num = 0
+    specialChar = 0
+    invalidChar = 0
+
+    # 字数检查
+    if len(passwd) > 20 or len(passwd) < 6:
+        return "不符合密码安全策略：密码长度无效"
+    # 包含字符数量统计
+    for s in passwd:
+        if s.isdigit():
+            number += 1
+        elif s.islower():
+            lower_num += 1
+        elif s.isupper():
+            upper_num += 1
+        elif s == "_" or s == "&" or s == "-" or s == "@":
+            specialChar += 1
+        else:
+            invalidChar += 1
+
+    # 英文字母检查
+    if lower_num <= 0 and upper_num <= 0:
+        return "不符合密码安全策略：未包含英文字母"
+    # 数字检查
+    if number < 2:
+        return "不符合密码安全策略：数字少于两个"
+    # 特殊文字检查
+    if invalidChar > 0:
+        return "不符合密码安全策略：包含无效字符"
+    if specialChar <= 0:
+        return "不符合密码安全策略：未包含特殊字符"
+    else:
+        return "OK"
+
+
 def add_student(request):
     student_form = StudentForm(request.POST or None, request.FILES or None)
     context = {'form': student_form, 'page_title': 'Add Student'}
@@ -324,6 +383,11 @@ def add_student(request):
             email = student_form.cleaned_data.get('email')
             gender = student_form.cleaned_data.get('gender')
             password = student_form.cleaned_data.get('password')
+            passwdPolicy = isPasswordValid(password)
+            print(passwdPolicy)
+            if not passwdPolicy == 'OK':
+                messages.error(request, "学生添加失败, " + passwdPolicy)
+                return render(request, 'hod_template/add_student_template.html', context)
             course = student_form.cleaned_data.get('course')
             session = student_form.cleaned_data.get('session')
             passport = request.FILES['profile_pic']
