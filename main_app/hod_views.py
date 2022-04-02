@@ -133,7 +133,7 @@ def add_online_teaching_url(request):
     form = OnlineTeachingURLForm(request.POST or None)
     context = {
         'form': form,
-        'page_title': '在线教学平台地址管理'
+        'page_title': '在线教学平台地址添加'
     }
     if request.method == 'POST':
         if form.is_valid():
