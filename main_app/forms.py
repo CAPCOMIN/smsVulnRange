@@ -26,7 +26,7 @@ class CustomUserForm(FormSettings):
 
     def __init__(self, *args, **kwargs):
         super(CustomUserForm, self).__init__(*args, **kwargs)
-
+        # 判断是否需要修改密码
         if kwargs.get('instance'):
             instance = kwargs.get('instance').admin.__dict__
             self.fields['password'].required = False
@@ -35,6 +35,7 @@ class CustomUserForm(FormSettings):
             if self.instance.pk is not None:
                 self.fields['password'].widget.attrs['placeholder'] = "Fill this only if you wish to update password"
 
+    # 判断邮箱是否已被注册
     def clean_email(self, *args, **kwargs):
         formEmail = self.cleaned_data['email'].lower()
         if self.instance.pk is None:  # Insert
@@ -47,7 +48,6 @@ class CustomUserForm(FormSettings):
             if dbEmail != formEmail:  # There has been changes
                 if CustomUser.objects.filter(email=formEmail).exists():
                     raise forms.ValidationError("The given email is already registered")
-
         return formEmail
 
     class Meta:
