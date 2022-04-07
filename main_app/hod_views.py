@@ -73,7 +73,7 @@ def calculated(request):
         # result=ast.literal_eval(formula)
         result = eval(formula)  # 命令注入
     except:
-        result = 'error formula'
+        result = '无效公式'
     l = {'page_title': '便捷计算器'}
     print(result)
     l['res'] = result
@@ -213,7 +213,10 @@ def stu_data_parser_result(request):
             messages.warning(request, "警告：数据解析错误，您可能提交了包含错误格式的数据！\n" + repr(e))
             context = {
                 'page_title': '学生XML数据解析',
-                'filename': 'data.xml'}
+                'filename': 'data.xml',
+                'datalist': datalist,
+                'all_data': all_data,
+            }
             return render(request, "hod_template/stu_data_parser.html", context)
         context = {
             'page_title': '学生XML数据解析',
