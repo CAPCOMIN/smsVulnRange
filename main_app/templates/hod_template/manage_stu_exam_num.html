@@ -31,7 +31,16 @@
                                 <tr>
                                     <td>{{ forloop.counter }}</td>
                                     <td>{{en.StuId}}</td>
-                                    <td>{{en.examMode}}</td>
+{#                                    <td>{{en.examMode}}</td>#}
+                                    {% if en.examMode == '00' %}
+                                            <td>期末考试</td>
+                                    {% elif en.examMode == '01' %}
+                                            <td>期中考试</td>
+                                    {% elif en.examMode == '10' %}
+                                            <td>课程测试</td>
+                                    {% elif en.examMode == '11' %}
+                                            <td>特种考试</td>
+                                    {% endif %}
                                     <td>{{en.examNum}}</td>
                                     <td>
 {#                                        {% if staff.profile_pic == ""  %}#}
