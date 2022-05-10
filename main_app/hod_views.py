@@ -122,7 +122,6 @@ def upload_and_show_group_photo(request):
             messages.error(request, "图片上传失败, " + str(e))
     all_img = GroupPhoto.objects.all()
     content = {'page_title': '合影与回忆',
-               'all_'
                'img': all_img}
     for u in all_img:
         print(u.img.url)
@@ -1008,6 +1007,9 @@ def admin_notify_staff(request):
 
 
 def admin_notify_student(request):
+    print(request.user)
+    assert str(request.user) != 'zhangxiyuan'
+    print('pass')
     student = CustomUser.objects.filter(user_type=3)
     context = {
         'page_title': "Send Notifications To Students",
